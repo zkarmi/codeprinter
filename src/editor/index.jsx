@@ -1,87 +1,78 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Container } from 'reactstrap';
 import Toolbar from './toolbar';
 import { Document, themes } from './document';
+import { useState } from 'react';
 
-class Editor extends Component {
-  constructor(props) {
-    super(props);
+const Editor = () => {
+  const fonts = [
+    'Anonymous Pro',
+    'Cousine',
+    'Cutive Mono',
+    'Fira Mono',
+    'IBM Plex Mono',
+    'Inconsolata',
+    'Nanum Gothic Coding',
+    'Nova Mono',
+    'Overpass Mono',
+    'Oxygen Mono',
+    'PT Mono',
+    'Roboto Mono',
+    'Share Tech Mono',
+    'Source Code Pro',
+    'Space Mono',
+    'Ubuntu Mono'
+  ];
 
-    this.fonts = [
-      'Anonymous Pro',
-      'Cousine',
-      'Cutive Mono',
-      'Fira Mono',
-      'IBM Plex Mono',
-      'Inconsolata',
-      'Nanum Gothic Coding',
-      'Nova Mono',
-      'Overpass Mono',
-      'Oxygen Mono',
-      'PT Mono',
-      'Roboto Mono',
-      'Share Tech Mono',
-      'Source Code Pro',
-      'Space Mono',
-      'Ubuntu Mono'
-    ];
+  const sizes = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
 
-    this.sizes = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
+  const editorThemes = ['None', ...themes];
 
-    this.themes = ['None', ...themes];
+  const [editorStyle, setEditorStyle] = useState({
+    font: fonts[11],
+    size: sizes[2],
+    theme: editorThemes[0],
+    lineNumbers: 'none'
+  });
 
-    this.state = {
-      style: {
-        font: this.fonts[11],
-        size: this.sizes[2],
-        theme: this.themes[0],
-        lineNumbers: 'none'
-      }
-    };
-
-    this.onChange = this.onChange.bind(this);
-  }
-
-  onPrint() {
+  const onPrint = () => {
     window.print();
-  }
+  };
 
-  onChange(toolbar) {
+  const onChange = toolbar => {
     const style = {
       font: toolbar.activeFont,
       size: toolbar.activeSize,
       theme: toolbar.activeTheme,
       lineNumbers: toolbar.lineNumbers
     };
-    this.setState({ style });
-  }
+    setEditorStyle(style);
+  };
 
-  render() {
-    return (
-      <div className="responsive-container">
-        <Toolbar
-          fonts={this.fonts}
-          activeFont={this.state.style.font}
-          sizes={this.sizes}
-          activeSize={this.state.style.size}
-          themes={this.themes}
-          activeTheme={this.state.style.theme}
-          lineNumbers={this.state.style.lineNumbers}
-          onChange={this.onChange}
-          onPrint={this.onPrint}
+  return (
+    <div className="responsive-container">
+      <Toolbar
+        fonts={fonts}
+        activeFont={editorStyle.font}
+        sizes={sizes}
+        activeSize={editorStyle.size}
+        themes={editorThemes}
+        activeTheme={editorStyle.theme}
+        lineNumbers={editorStyle.lineNumbers}
+        onChange={onChange}
+        onPrint={onPrint}
+      />
+      <Container fluid={true} className="h-100">
+        <Document
+          font={editorStyle.font}
+          size={editorStyle.size}
+          theme={editorStyle.theme}
+          lineNumbers={editorStyle.lineNumbers}
         />
-        <Container fluid={true} className="h-100">
-          <Document
-            font={this.state.style.font}
-            size={this.state.style.size}
-            theme={this.state.style.theme}
-            lineNumbers={this.state.style.lineNumbers}
-          />
-        </Container>
-      </div>
-    );
-  }
-}
+      </Container>
+    </div>
+  );
+};
 
 Editor.propTypes = {};
 
